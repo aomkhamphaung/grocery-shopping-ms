@@ -11,7 +11,7 @@ const server = async () => {
   await App(app);
 
   app.listen(PORT, () => {
-    console.log(`🚀 Server is up on port: ${PORT}`);
+    console.log(`🚀 Customer Server is up on port: ${PORT}`);
   });
 };
 
