@@ -1,13 +1,18 @@
-import express, { Request, Response, NextFunction } from "express";
-import cors from "cors";
+import express from "express";
+import App from "./express-app";
+import { PORT } from "./config";
+import { dbConnection } from "./database";
 
-const app = express();
-app.use(cors());
+const server = async () => {
+  const app = express();
 
-app.use("/", (req: Request, res: Response, next: NextFunction) => {
-  return res.json("Shopping");
-});
+  await dbConnection();
 
-app.listen(5003, () => {
-  console.log(`Server is up on port: 5003`);
-});
+  await App(app);
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is up on port: ${PORT}`);
+  });
+};
+
+server();
