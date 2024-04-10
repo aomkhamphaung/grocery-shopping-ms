@@ -1,9 +1,14 @@
 import { Customer, Address } from "../models";
 import { APIError, STATUS_CODES } from "../../utils/app-errors";
-import { CustomerInput, AddressInput } from "../../dto";
+import {
+  CreateCustomerInput,
+  AddressInput,
+  WishlistInput,
+  FindCustomerQuery,
+} from "../../dto";
 
 class CustomerRepository {
-  async createCustomer({ email, password, phone, salt }: CustomerInput) {
+  async createCustomer({ email, password, phone, salt }: CreateCustomerInput) {
     try {
       const customer = new Customer({
         email,
@@ -56,7 +61,7 @@ class CustomerRepository {
     }
   }
 
-  async findCustomer({ email }: CustomerInput) {
+  async findCustomer({ email }: FindCustomerQuery) {
     try {
       const existingCustomer = await Customer.findOne({ email });
       return existingCustomer;
@@ -69,7 +74,7 @@ class CustomerRepository {
     }
   }
 
-  async findCustomerById({ _id }: CustomerInput) {
+  async findCustomerById(_id: string) {
     try {
       const existingCustomer = await Customer.findById(_id).populate("address");
 
@@ -83,9 +88,9 @@ class CustomerRepository {
     }
   }
 
-  async wishlist({ _id }: CustomerInput) {
+  async wishlist(customerId: string) {
     try {
-      const profile = await Customer.findById(_id).populate("wishlist");
+      const profile = await Customer.findById(customerId).populate("wishlist");
 
       return profile!.wishlist;
     } catch (err) {
@@ -98,9 +103,47 @@ class CustomerRepository {
   }
 
   async addWishlistItem(
-    _id,
-    { _id, name, description, price, isAvailable, banner }
-  );
+    customerId: string,
+    { _id, name, description, price, banner, isAvailable }: WishlistInput
+  ) {
+    const product = { _id, name, description, price, banner, isAvailable };
+    try {
+      const profile = await Customer.findById(customerId).populate("wishlist");
+
+      if (profile) {
+        let wishlist = profile.wishlist;
+
+        if (wishlist.length > 0) {
+          let isExist = false;
+
+          wishlist.map((item) => {
+            if (item._id.toString() === product._id.toString()) {
+              const index = wishlist.indexOf(item);
+              wishlist.splice(index, 1);
+              isExist = true;
+            }
+          });
+
+          if (!isExist) {
+            wishlist.push(product);
+          }
+        } else {
+          wishlist.push(product);
+        }
+
+        profile.wishlist = wishlist;
+      }
+
+      const result = await profile!.save();
+      return result.wishlist;
+    } catch (err) {
+      throw new APIError(
+        "API ERROR",
+        STATUS_CODES.INTERNAL_ERROR,
+        "Unable to add to wishlist"
+      );
+    }
+  }
 }
 
 export default CustomerRepository;
