@@ -6,7 +6,7 @@ const router = express.Router();
 const service = new CustomerService();
 
 router.post(
-  "/customer/signup",
+  "/signup",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password, phone } = req.body;
@@ -19,7 +19,7 @@ router.post(
 );
 
 router.post(
-  "/customer/login",
+  "/login",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
@@ -32,7 +32,7 @@ router.post(
 );
 
 router.post(
-  "/customer/address",
+  "/address",
   UserAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -52,7 +52,7 @@ router.post(
 );
 
 router.get(
-  "/customer/profile",
+  "/profile",
   UserAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,22 +65,22 @@ router.get(
   }
 );
 
-// router.get(
-//   "/customer/shoping-details",
-//   UserAuth,
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const { _id } = req.user;
-//       const { data } = await service.getShopingDetails(_id);
-//       return res.json(data);
-//     } catch (err) {
-//       next(err);
-//     }
-//   }
-// );
+router.get(
+  "/shoping-details",
+  UserAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { _id } = req.user;
+      const { data } = await service.getShoppingDetails(_id);
+      return res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 router.get(
-  "/customer/wishlist",
+  "/wishlist",
   UserAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {

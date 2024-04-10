@@ -1,14 +1,47 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+interface Address {
+  _id: string;
+  street: string;
+  postalCode: string;
+  city: string;
+  country: string;
+}
+
+interface CartItem {
+  product: {
+    _id: string;
+    name: string;
+    banner: string;
+    price: number;
+  };
+  unit: number;
+}
+
+interface WishlistItem {
+  _id: string;
+  name: string;
+  description: string;
+  banner: string;
+  isAvailable: boolean;
+  price: number;
+}
+
+interface Order {
+  _id: string;
+  amount: number;
+  date: Date;
+}
+
 interface CustomerDoc extends Document {
   email: string;
   password: string;
   salt: string;
   phone: string;
-  address: [any];
-  cart: [any];
-  wishlist: [any];
-  orders: [any];
+  address: Address[];
+  cart: CartItem[];
+  wishlist: WishlistItem[];
+  orders: Order[];
 }
 
 const CustomerSchema = new Schema(

@@ -1,4 +1,5 @@
 import CustomerRepository from "../database/repository/customer-repository";
+import { CreateCartItemInput, CreateOrderInput } from "../dto";
 import {
   FormateData,
   GeneratePassword,
@@ -123,12 +124,25 @@ class CustomerService {
     }
   }
 
-  async getProfile(_id: string) {
+  async getProfile(id: string) {
     try {
-      const existingCustomer = await this.repository.findCustomerById(_id);
+      const existingCustomer = await this.repository.findCustomerById(id);
       return FormateData(existingCustomer);
     } catch (err: any) {
       throw new APIError("Data Not found", err);
+    }
+  }
+
+  async getShoppingDetails(id: string) {
+    try {
+      const existingCustomer = await this.repository.findCustomerById(id);
+
+      if (existingCustomer) {
+        return FormateData(existingCustomer);
+      }
+      return FormateData({ message: "Error" });
+    } catch (err: any) {
+      throw new APIError("Data not found!", err);
     }
   }
 
@@ -160,6 +174,57 @@ class CustomerService {
       return FormateData(wishlistResult);
     } catch (err: any) {
       throw new APIError("Data Not found", err);
+    }
+  }
+
+  async manageCart(
+    customerId: string,
+    product: CreateCartItemInput,
+    qty: number,
+    isRemove: boolean
+  ) {
+    try {
+      const result = await this.repository.addCartItem(
+        customerId,
+        product,
+        qty,
+        isRemove
+      );
+      return FormateData(result);
+    } catch (err: any) {
+      throw new APIError("Data not found!", err);
+    }
+  }
+
+  async manageOrder(customerId: string, order: CreateOrderInput) {
+    try {
+      const result = await this.repository.addOrder(customerId, order);
+      return FormateData(result);
+    } catch (err: any) {
+      throw new APIError("Data not found!", err);
+    }
+  }
+
+  subscribeEvents(payload: any) {
+    const { event, data } = payload;
+    const { userId, product, order, qty } = data;
+
+    switch (event) {
+      case "ADD_TO_WISHLIST":
+      case "REMOVE_FROM_WISHLIST":
+        this.addToWishlist(userId, product);
+        break;
+      case "ADD_TO_CART":
+        this.manageCart(userId, product, qty, false);
+        break;
+      case "REMOVE_FROM_CART":
+        this.manageCart(userId, product, qty, true);
+        break;
+      case "CREATE_ORDER":
+        this.manageOrder(userId, order);
+        break;
+      default:
+        break;
     }
   }
 }

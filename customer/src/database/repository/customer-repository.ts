@@ -5,6 +5,8 @@ import {
   AddressInput,
   WishlistInput,
   FindCustomerQuery,
+  CreateCartItemInput,
+  CreateOrderInput,
 } from "../../dto";
 
 class CustomerRepository {
@@ -141,6 +143,88 @@ class CustomerRepository {
         "API ERROR",
         STATUS_CODES.INTERNAL_ERROR,
         "Unable to add to wishlist"
+      );
+    }
+  }
+
+  async addCartItem(
+    customerId: string,
+    product: CreateCartItemInput,
+    qty: number,
+    isRemove: boolean
+  ) {
+    try {
+      const profile = await Customer.findById(customerId);
+      if (profile) {
+        const cartItem = {
+          product: {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            banner: product.banner,
+          },
+          unit: qty,
+        };
+
+        let cartItems = profile.cart;
+        if (cartItems.length > 0) {
+          let isExist = false;
+          cartItems.map((item) => {
+            if (
+              item.product._id.toString() === cartItem.product._id.toString()
+            ) {
+              if (isRemove) {
+                cartItems.splice(cartItems.indexOf(item), 1);
+              } else {
+                item.unit = qty;
+              }
+              isExist = true;
+            }
+          });
+
+          if (!isExist) {
+            cartItems.push(cartItem);
+          }
+        } else {
+          cartItems.push(cartItem);
+        }
+
+        profile.cart = cartItems;
+        const result = await profile.save();
+        return result;
+      }
+
+      throw new Error("Unable to add to cart!");
+    } catch (err) {
+      throw new APIError(
+        "API ERROR",
+        STATUS_CODES.INTERNAL_ERROR,
+        "Unable to add to cart!"
+      );
+    }
+  }
+
+  async addOrder(customerId: string, order: CreateOrderInput) {
+    try {
+      const profile = await Customer.findById(customerId);
+
+      if (profile) {
+        if (profile.orders === undefined) {
+          profile.orders = [];
+        }
+
+        profile.orders.push(order);
+        profile.cart = [];
+        const result = await profile.save();
+        return result;
+      }
+
+      throw new Error("Unable to create order!");
+    } catch (err) {
+      throw new APIError(
+        "API ERROR",
+        STATUS_CODES.INTERNAL_ERROR,
+        "Unable to create order!"
       );
     }
   }

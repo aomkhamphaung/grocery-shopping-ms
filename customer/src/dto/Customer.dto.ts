@@ -10,8 +10,11 @@ export interface CreateCustomerInput {
   phone: string;
 }
 
-export interface FindCustomerQuery {
-  email: string;
+export interface CreateCartItemInput {
+  _id: string;
+  name: string;
+  price: number;
+  banner: string;
 }
 
 export interface WishlistInput {
@@ -21,4 +24,14 @@ export interface WishlistInput {
   banner: string;
   isAvailable: boolean;
   price: number;
+}
+
+export interface CreateOrderInput {
+  _id: string;
+  amount: number;
+  date: Date;
+}
+
+export interface FindCustomerQuery {
+  email: string;
 }
