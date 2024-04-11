@@ -34,12 +34,13 @@ const OrderSchema = new Schema(
   },
   {
     toJSON: {
-        transform(doc, ret) {
-            delete ret.__v,
-            delete ret.createdAt,
-            delete ret.updatedAt,
-        }
-    }, timestamps: true
+      transform(doc, ret) {
+        delete ret.__v;
+        delete ret.createdAt;
+        delete ret.updatedAt;
+      },
+    },
+    timestamps: true,
   }
 );
 
