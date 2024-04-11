@@ -20,9 +20,7 @@ class CustomerService {
     const { email, password } = userInputs;
 
     try {
-      const existingCustomer = await this.repository.findCustomer({
-        email,
-      });
+      const existingCustomer = await this.repository.findCustomer(email);
 
       if (!existingCustomer) {
         throw new APIError(
@@ -64,7 +62,7 @@ class CustomerService {
     const { email, password, phone } = userInputs;
 
     try {
-      const existingCustomer = await this.repository.findCustomer({ email });
+      const existingCustomer = await this.repository.findCustomer(email);
 
       if (existingCustomer) {
         throw new APIError(

@@ -4,7 +4,6 @@ import {
   CreateCustomerInput,
   AddressInput,
   WishlistInput,
-  FindCustomerQuery,
   CreateCartItemInput,
   CreateOrderInput,
 } from "../../dto";
@@ -63,7 +62,7 @@ class CustomerRepository {
     }
   }
 
-  async findCustomer({ email }: FindCustomerQuery) {
+  async findCustomer(email: string) {
     try {
       const existingCustomer = await Customer.findOne({ email });
       return existingCustomer;

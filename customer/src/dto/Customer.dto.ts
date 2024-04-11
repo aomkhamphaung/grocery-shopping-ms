@@ -31,7 +31,3 @@ export interface CreateOrderInput {
   amount: number;
   date: Date;
 }
-
-export interface FindCustomerQuery {
-  email: string;
-}
