@@ -30,21 +30,7 @@ const OrderSchema = new Schema(
     amount: Number,
     status: String,
     transactionId: String,
-    item: [
-      {
-        product: {
-          _id: { type: String, required: true },
-          name: String,
-          description: String,
-          banner: String,
-          type: String,
-          unit: Number,
-          price: Number,
-          supplier: String,
-        },
-        unit: { type: Number, require: true },
-      },
-    ],
+    item: [{ type: Schema.Types.ObjectId, ref: "cart", require: true }],
   },
   {
     toJSON: {
