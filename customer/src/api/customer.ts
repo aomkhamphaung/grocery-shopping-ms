@@ -66,7 +66,7 @@ router.get(
 );
 
 router.get(
-  "/shoping-details",
+  "/shopping-details",
   UserAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {

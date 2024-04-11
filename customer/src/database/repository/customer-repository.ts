@@ -76,10 +76,9 @@ class CustomerRepository {
     }
   }
 
-  async findCustomerById(_id: string) {
+  async findCustomerById(id: string) {
     try {
-      const existingCustomer = await Customer.findById(_id).populate("address");
-
+      const existingCustomer = await Customer.findById(id).populate("address");
       return existingCustomer;
     } catch (err) {
       throw new APIError(

@@ -223,6 +223,9 @@ class CustomerService {
       case "CREATE_ORDER":
         this.manageOrder(userId, order);
         break;
+      case "TEST":
+        console.log("WORKING...");
+        break;
       default:
         break;
     }
