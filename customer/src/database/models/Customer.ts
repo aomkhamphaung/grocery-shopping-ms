@@ -46,18 +46,18 @@ interface CustomerDoc extends Document {
 
 const CustomerSchema = new Schema(
   {
-    email: { type: String, require: true },
-    password: { type: String, require: true },
-    salt: { type: String, require: true },
-    phone: { type: String, require: true },
+    email: String,
+    password: String,
+    salt: String,
+    phone: String,
     address: [{ type: Schema.Types.ObjectId, ref: "address", require: true }],
     cart: [
       {
         product: {
-          _id: { type: String },
-          name: { type: String },
-          banner: { type: String },
-          price: { type: Number },
+          _id: String,
+          name: String,
+          banner: String,
+          price: Number,
         },
         unit: { type: Number, require: true },
       },
@@ -65,17 +65,17 @@ const CustomerSchema = new Schema(
     wishlist: [
       {
         _id: { type: String, required: true },
-        name: { type: String },
-        description: { type: String },
-        banner: { type: String },
-        isAvailable: { type: Boolean },
-        price: { type: Number },
+        name: String,
+        description: String,
+        banner: String,
+        isAvailable: Boolean,
+        price: Number,
       },
     ],
     orders: [
       {
         _id: { type: String, required: true },
-        amount: { type: Number },
+        amount: Number,
         date: { type: Date, default: Date.now() },
       },
     ],
