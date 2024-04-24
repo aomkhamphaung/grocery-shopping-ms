@@ -54,7 +54,7 @@ class ShoppingService {
     }
   }
 
-  async ManageCart(
+  async manageCart(
     customerId: string,
     item: CreateCartItemInput,
     qty: number,
@@ -75,6 +75,35 @@ class ShoppingService {
         STATUS_CODES.INTERNAL_ERROR,
         error.message || "Unable to get orders!"
       );
+    }
+  }
+
+  async subscribeEvents(payload: any) {
+    const { event, data } = payload;
+    const { userId, product, qty } = data;
+
+    switch (event) {
+      case "ADD_TO_CART":
+        this.manageCart(userId, product, qty, false);
+        break;
+      case "REMOVE_FROM_CART":
+        this.manageCart(userId, product, qty, true);
+        break;
+      default:
+        break;
+    }
+  }
+
+  async getOrderPayload(userId: string, order: {}, event: string) {
+    if (order) {
+      const payload = {
+        event: event,
+        data: { userId, order },
+      };
+
+      return FormateData(payload);
+    } else {
+      return FormateData({ error: "No order available!" });
     }
   }
 }
