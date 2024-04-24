@@ -8,3 +8,8 @@ export interface CreateCartItemInput {
   price: number;
   supplier: string;
 }
+
+export interface userInput {
+  _id: string;
+  transactionId: string;
+}

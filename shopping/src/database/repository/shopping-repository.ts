@@ -121,3 +121,5 @@ class ShoppingRepository {
     }
   }
 }
+
+export default ShoppingRepository;
