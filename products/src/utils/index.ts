@@ -41,6 +41,7 @@ export const GenerateToken = (payload: AuthPayload) => {
 export const ValidateToken = async (req: Request) => {
   try {
     const token = req.get("Authorization");
+    const bearerToken = token!.split(" ")[1];
     const payload = await jwt.verify(token!.split(" ")[1], APP_SECRET);
     req.user = payload;
     return true;
