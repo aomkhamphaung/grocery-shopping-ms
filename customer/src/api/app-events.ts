@@ -11,7 +11,7 @@ export default async (app: Application) => {
 
       service.subscribeEvents(payload);
 
-      console.log("===== Shopping Service Received Event =====");
+      console.log("===== Customer Service Received Event =====");
       return res.status(200).json(payload);
     }
   );

@@ -2,7 +2,7 @@ import { Application, Request, Response, NextFunction } from "express";
 import ProductService from "../services/product-service";
 
 export default async (app: Application) => {
-  const service = new ProductService();
+  // const service = new ProductService();
 
   app.use(
     "/app-events",

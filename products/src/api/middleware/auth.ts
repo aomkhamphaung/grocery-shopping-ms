@@ -7,7 +7,6 @@ export const UserAuth = async (
   next: NextFunction
 ) => {
   const isAuthorized = await ValidateToken(req);
-
   if (isAuthorized) {
     return next();
   }
