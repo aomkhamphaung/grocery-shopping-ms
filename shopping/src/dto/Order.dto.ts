@@ -13,3 +13,8 @@ export interface userInput {
   _id: string;
   transactionId: string;
 }
+
+export class CustomerPayload {
+  _id: string;
+  email: string;
+}

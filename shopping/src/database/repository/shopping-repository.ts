@@ -39,39 +39,31 @@ class ShoppingRepository {
     isRemove: boolean
   ) {
     try {
-      const cart = await Cart.findOne({ customerId: customerId });
+      let cart = await Cart.findOne({ customerId: customerId });
 
-      const { _id } = item;
-
-      if (cart) {
-        let isExist = false;
-        let cartItems = cart?.items;
-
-        if (cartItems.length > 0) {
-          cartItems.map((item) => {
-            if (item.product._id.toString() === _id.toString()) {
-              if (isRemove) {
-                cartItems.splice(cartItems.indexOf(item), 1);
-              } else {
-                item.unit = qty;
-              }
-              isExist = true;
-            }
-          });
-        }
-
-        if (!isExist && !isRemove) {
-          cartItems.push({ product: { ...item }, unit: qty });
-        }
-
-        cart.items = cartItems;
-        return await cart.save();
-      } else {
-        return await Cart.create({
-          customerId,
-          items: [{ product: { ...item }, unit: qty }],
-        });
+      if (!cart) {
+        cart = await Cart.create({ customerId, items: [] });
       }
+
+      const cartItems = cart.items || [];
+      const existingItem = cartItems.find(
+        (cartItem) => cartItem.product._id.toString() === item._id.toString()
+      );
+
+      if (existingItem) {
+        if (isRemove) {
+          cartItems.splice(cartItems.indexOf(existingItem), 1);
+        } else {
+          existingItem.unit = qty;
+        }
+      } else if (!isRemove) {
+        cartItems.push({ product: { ...item }, unit: qty });
+      }
+
+      cart.items = cartItems;
+      await cart.save();
+
+      return cart;
     } catch (err) {
       throw new APIError(
         "API ERROR",

@@ -44,7 +44,7 @@ router.get(
   "/cart",
   UserAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const { _id } = req.user();
+    const { _id } = req.user;
     try {
       const { data } = await service.getCart(_id);
       return res.status(200).json(data);

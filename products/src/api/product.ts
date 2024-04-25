@@ -83,7 +83,7 @@ router.put(
         _id,
         {
           productId: req.body._id,
-          qty: req.body,
+          qty: req.body.qty,
         },
         "ADD_TO_WISHLIST"
       );
@@ -131,7 +131,7 @@ router.put(
         _id,
         {
           productId: req.body,
-          qty: req.body,
+          qty: req.body.qty,
         },
         "ADD_TO_CART"
       );

@@ -76,12 +76,16 @@ class ProductService {
     event: string
   ) {
     const product = await this.repository.findById(productId);
+
     if (product) {
       const payload = {
         event: event,
-        data: { userId, product, qty },
+        data: {
+          userId,
+          product,
+          qty,
+        },
       };
-
       return FormateData(payload);
     } else {
       return FormateData({ error: "No product available!" });

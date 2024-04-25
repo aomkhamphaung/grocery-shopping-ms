@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { APP_SECRET } from "../config";
 import { Request } from "express";
-// import { AuthPayload } from "../dto";
+import { AuthPayload } from "../dto";
 import axios from "axios";
 
 declare global {
@@ -29,14 +29,14 @@ export const ValidatePassword = async (
   return (await GeneratePassword(enterPassword, salt)) === savedPassword;
 };
 
-// export const GenerateToken = (payload: AuthPayload) => {
-//   try {
-//     return jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// };
+export const GenerateToken = (payload: AuthPayload) => {
+  try {
+    return jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 export const ValidateToken = async (req: Request) => {
   try {
