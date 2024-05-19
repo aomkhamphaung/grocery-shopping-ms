@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import ProductService from "../services/product-service";
 import { UserAuth } from "./middleware/auth";
-import { PublishCustomerEvent, PublishShoppingEvent } from "../utils";
+// import { PublishCustomerEvent, PublishShoppingEvent } from "../utils";
 
 const router = express.Router();
 const service = new ProductService();
@@ -88,7 +88,7 @@ router.put(
         "ADD_TO_WISHLIST"
       );
 
-      PublishCustomerEvent(data);
+      // PublishCustomerEvent(data);
       return res.status(200).json(data.data.product);
     } catch (err) {}
   }
@@ -111,7 +111,7 @@ router.delete(
         "REMOVE_FROM_WISHLIST"
       );
 
-      PublishCustomerEvent(data);
+      // PublishCustomerEvent(data);
 
       return res.status(200).json(data.data.product);
     } catch (err) {
@@ -136,8 +136,8 @@ router.put(
         "ADD_TO_CART"
       );
 
-      PublishCustomerEvent(data);
-      PublishShoppingEvent(data);
+      // PublishCustomerEvent(data);
+      // PublishShoppingEvent(data);
 
       const result = {
         product: data.data.product,
@@ -167,8 +167,8 @@ router.delete(
         "REMOVE_FROM_CART"
       );
 
-      PublishCustomerEvent(data);
-      PublishShoppingEvent(data);
+      // PublishCustomerEvent(data);
+      // PublishShoppingEvent(data);
 
       const result = {
         product: data.data.product,

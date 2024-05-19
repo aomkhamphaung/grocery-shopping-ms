@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { APP_SECRET } from "../config";
+import { APP_SECRET, MESSAGE_BROKER_URL, EXCHANGE_NAME } from "../config";
 import { Request } from "express";
 import { AuthPayload } from "../dto/Auth.dto";
-import axios from "axios";
+import amqplib  from "amqplib";
 
 declare global {
   namespace Express {
@@ -59,10 +59,37 @@ export const FormateData = (data: any) => {
   }
 };
 
-export const PublishCustomerEvent = async (payload: any) => {
-  axios.post("http://localhost:5000/customer/app-events", { payload });
-};
+/* ==================== Message Broker ==================== */
 
-export const PublishShoppingEvent = async (payload: any) => {
-  axios.post("http://localhost:5000/shopping/app-events", { payload });
-};
+// Create a channel
+export const CreateChannel = async () => {
+  try {
+    const connection = await amqplib.connect(MESSAGE_BROKER_URL);
+    const channel = await connection.createChannel();
+    await channel.assertExchange(EXCHANGE_NAME, "direct", false);
+    return channel;
+  } catch(err) {
+    throw err;
+  }
+  
+}
+
+// publish message
+export const PublishMessage = async (channel: string, service: string, message: string) => {
+  try {
+    await channel.publish(EXCHAGE_NAME, binding_key, Buffer.from(message));
+  } catch(err) {
+    throw err;
+  }
+}
+
+// subscribe message
+export const SubscribeMessage = async (channel: string, service: string, binding_key: string) => {
+  const appQueue = await channel.assertQueue(QUEUE_NAME);
+  channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
+  channel.consume(appQueue.queue, data => {
+    console.log("received data");
+    console.log(data.content.toString());
+    channel.ack(data);
+  })
+}
